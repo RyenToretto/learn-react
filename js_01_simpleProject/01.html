@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <title>标签方式引入 react 及其插件</title>
+        <style>
+            h3 {
+                color: #f00;
+            }
+        </style>
+    </head>
+
+    <body>
+
+        <div id="root"></div>
+
+        <!-- react 依赖 -->
+        <script type="text/javascript" src="../lib/react/react.development.js"></script>
+        <script type="text/javascript" src="../lib/react/react-dom.development.js"></script>
+
+        <!-- 需要经过 babel 处理的代码 -->
+        <script type="text/javascript">
+            // 1. 创建虚拟 DOM 元素
+            const vDom =React.createElement(
+                'h3',
+                {
+                    id: 'my_h3'
+                },
+                'js生成虚拟 DOM元素'
+            );
+
+            // 2. 渲染虚拟 DOM 到 真实 DOM 容器中
+            ReactDOM.render(
+                vDom,
+                document.getElementById('root')
+            );
+        </script>
+    </body>
+</html>
