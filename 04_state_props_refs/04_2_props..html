@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <title>React 组件的三大属性</title>
+    </head>
+
+    <body>
+        <div id="root"></div>
+
+        <script type="text/javascript" src="../lib/react/react.development.js"></script>
+        <script type="text/javascript" src="../lib/react/react-dom.development.js"></script>
+        <script type="text/javascript" src="../lib/babel/babel-standalone.js"></script>
+        <script type="text/javascript" src="../lib/react/prop-types.js"></script>
+
+        <script type="text/babel">
+            // 组件类：每次实例化 都是一个独立的不同的实例对象
+            class Person extends React.Component {
+                constructor(props) { // 构造函数:一旦实例化一个组件对象，就会调用
+                    // 做一些 组件初始化 工作（初始化状态机 state）
+                    // 如果组件内 没有重写 constructor 构造函数，则会原来自带构造函数，且含此行代码
+                    super(props); // this.props = props; // {father: {...}, mother: {...}, sister: {}}
+
+                    this.state = {
+                        name: 'Ryen Toretto',
+                        age: '18',
+                        sex: 1
+                    }
+                }
+
+                render() {
+                    const {name, age, sex} = this.state;
+                    const {name: faName, age: faAge, sex: faSex} = this.props.father;
+                    const {name: moName, age: moAge, sex: moSex} = this.props.mother;
+
+                    return <ul className={'diy_com'}>
+                        <li>姓名：{name}</li>
+                        <li>年龄：{age}岁</li>
+                        <li>性别：{sex ? '男' : '女'}</li>
+                        <li>父亲：{faName}, {faAge}岁, {faSex ? '男' : '女'}</li>
+                        <li>母亲：{moName}, {moAge}岁, {moSex ? '男' : '女'}</li>
+                    </ul>;
+                }
+            }
+
+            // 组件类 props 的约束
+            Person.propTypes = {
+                father: PropTypes.object.isRequired, // 属性名/属性类型/属性必要性
+                mother: PropTypes.object.isRequired // 属性名/属性类型/属性必要性
+            }
+
+            ReactDOM.render(
+                <Person
+                    father={{name: 'Tom', age: 36, sex: 1}}
+                    mother={{name: 'Jerry', age: 32, sex: 0}}
+                />,
+                document.getElementById('root')
+            );
+        </script>
+    </body>
+</html>

@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <title>React 组件的三大属性</title>
+    </head>
+
+    <body>
+        <div id="root"></div>
+
+        <script type="text/javascript" src="../lib/react/react.development.js"></script>
+        <script type="text/javascript" src="../lib/react/react-dom.development.js"></script>
+        <script type="text/javascript" src="../lib/babel/babel-standalone.js"></script>
+
+        <script type="text/babel">
+            /**** 程序 是对现实生活的抽象
+             现实的某个事物： 可变化的状态    、    操作状态数据的行为
+             对象：          属性：属性值    、    方法：可能操作属性
+             ****/
+            class BigComponent extends React.Component {
+                constructor(props) {
+                    super(props);
+
+                    // 初始化 state 状态机
+                    this.state = {
+                        hello: 'hello react state',
+                        isLikeMe: false
+                    }
+                }
+
+                // clickH3Com() {} // 自定义组件方法中的 this 默认为 undefined
+                clickH3Com = () => { // 使用箭头函数访问 外层的 this (组件对象的 this)
+                    // 更新组件状态数据 ----> 自动更新界面(自动调用 render() 方法 采用最新的 state)
+                    this.setState({
+                        isLikeMe: !this.state.isLikeMe
+                    }, () => {
+                        // 界面自动更新完成后执行的 回调函数
+                    });
+                }
+
+                render() {
+                    // 读状态数据
+                    const h3Text = this.state.isLikeMe ? 'Is Like Me' : 'Is Like You';
+
+                    return <h3 className={'diy_com'} onClick={this.clickH3Com}>
+                        {h3Text}
+                    </h3>;
+                }
+            }
+
+            ReactDOM.render(
+                <BigComponent />,
+                document.getElementById('root')
+            );
+        </script>
+    </body>
+</html>
