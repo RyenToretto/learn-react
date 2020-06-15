@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <title>简单组件/复杂组件</title>
+    </head>
+
+    <body>
+
+        <div id="root"></div>
+        <div id="root_copy"></div>
+
+        <!-- react 依赖 -->
+        <script type="text/javascript" src="../lib/react/react.development.js"></script>
+        <script type="text/javascript" src="../lib/react/react-dom.development.js"></script>
+
+        <!-- babel 依赖
+            1. es6 转换成 es5
+            2. 将 jsx 转成 js
+             ----作者被 Facebook 招募
+             ----jsx 用于创建虚拟 DOM，底层其实就是生成一个 js 对象
+         -->
+        <script type="text/javascript" src="../lib/babel/babel-standalone.js"></script>
+
+        <!-- 需要经过 babel 处理的代码, 以便浏览器执行的 js -->
+        <script type="text/babel">
+            /****
+             工厂函数: 每次调用都返回一个新对象
+             ****/
+            // 1. 工厂函数组件（简单组件）
+            const SimpleComponent = () => {
+                return <h3 className={'simple_component'}>{'Simple Component'}</h3>;
+            };
+
+            // 2. es6 的 class 组件（复杂组件）
+            class BigComponent extends React.Component {
+                render() { // 继承并重写
+                    console.log(this); // BigComponent 的实例对象
+                    return <h3 className={'big_component'}>{'Big Component'}</h3>;
+                }
+            }
+
+            // 渲染虚拟 DOM 到 真实 DOM 容器中
+            ReactDOM.render(
+                <SimpleComponent />,
+                document.getElementById('root')
+            );
+
+            // 渲染虚拟 DOM 到 真实 DOM 容器中
+            ReactDOM.render(
+                <BigComponent />,
+                document.getElementById('root_copy')
+            );
+        </script>
+    </body>
+</html>
