@@ -14,22 +14,43 @@
         <script type="text/javascript" src="../lib/react/prop-types.js"></script>
 
         <script type="text/babel">
+            /*
+            * super()  调用 父组件 的构造函数
+            * */
+
+            /**** 组件定义 start ****/
             // 组件类：每次实例化 都是一个独立的不同的实例对象
             class Person extends React.Component {
-                constructor(props) { // 构造函数:一旦实例化一个组件对象，就会调用
+                /**** 类 的内部会自动执行以下代码 可写 可不写
+                 constructor(props) { // 构造函数:一旦实例化一个组件对象，就会调用
                     // 做一些 组件初始化 工作（初始化状态机 state）
-                    // 如果组件内 没有重写 constructor 构造函数，则会原来自带构造函数，且含此行代码
                     super(props); // this.props = props; // {father: {...}, mother: {...}, sister: {}}
+                } ****/
 
-                    this.state = {
-                        name: 'Ryen Toretto',
-                        age: '18',
-                        sex: 1
-                    }
+                /**** static 表示 类 的属性 ****/
+                // 组件类 props 的 默认值
+                static defaultProps = {
+                    address: '北京' // 属性名 / 默认值
+                }
+
+                /**** static 表示 类 的属性 ****/
+                // 组件类 props 的 约束
+                static propTypes = {
+                    father: PropTypes.object.isRequired, // 属性名 / 属性类型 / 属性必要性
+                    mother: PropTypes.object.isRequired // 属性名 / 属性类型 / 属性必要性
+                }
+
+                /**** 类的实例（组件对象） 的属性 ****/
+                state = { // 初始化 state 状态机
+                    name: 'Ryen Toretto',
+                    age: '18',
+                    sex: 1
                 }
 
                 render() {
                     const {name, age, sex} = this.state;
+
+                    const {address} = this.props;
                     const {name: faName, age: faAge, sex: faSex} = this.props.father;
                     const {name: moName, age: moAge, sex: moSex} = this.props.mother;
 
@@ -39,15 +60,11 @@
                         <li>性别：{sex ? '男' : '女'}</li>
                         <li>父亲：{faName}, {faAge}岁, {faSex ? '男' : '女'}</li>
                         <li>母亲：{moName}, {moAge}岁, {moSex ? '男' : '女'}</li>
+                        <li>家庭地址：{address}</li>
                     </ul>;
                 }
             }
-
-            // 组件类 props 的约束
-            Person.propTypes = {
-                father: PropTypes.object.isRequired, // 属性名/属性类型/属性必要性
-                mother: PropTypes.object.isRequired // 属性名/属性类型/属性必要性
-            }
+            /**** 组件定义 over ****/
 
             ReactDOM.render(
                 <Person
