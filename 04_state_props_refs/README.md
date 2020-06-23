@@ -10,9 +10,9 @@
     props
 ```
 
-#### refs
+#### refs 与 事件处理
 ```
-    refs 与 事件处理
+    refs 保存了组件类 所有含有 ref 属性的标签元素
 ```
 
 一、props 和 state 的区别

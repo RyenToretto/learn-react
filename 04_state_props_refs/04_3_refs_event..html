@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <title>refs 与 事件处理</title>
+    </head>
+
+    <body>
+        <div id="root"></div>
+
+        <script type="text/javascript" src="../lib/react/react.development.js"></script>
+        <script type="text/javascript" src="../lib/react/react-dom.development.js"></script>
+        <script type="text/javascript" src="../lib/babel/babel-standalone.js"></script>
+        <script type="text/javascript" src="../lib/react/prop-types.js"></script>
+
+        <script type="text/babel">
+            /**** 组件定义 start ****/
+            class Person extends React.Component {
+                static defaultProps = {
+                    age: 18,
+                    address: '北京'
+                }
+
+                static propTypes = {
+                    name: PropTypes.string.isRequired,
+                    age: PropTypes.number
+                }
+
+                state = {
+                    langStr: '中文'
+                }
+
+                showTips = () => {
+                    alert(this.refs['tipsInput'].value);
+                }
+
+                render() {
+                    const {langStr} = this.state;
+                    const {address, name, age, sex} = this.props;
+
+                    return <ul className={'diy_com'}>
+                        <li>
+                            <input ref='tipsInput' type='text' />
+                        </li>
+                        <li>
+                            <button onClick={this.showTips}>提示</button>
+                        </li>
+                        <li>姓名：{name}</li>
+                        <li>性别：{sex}</li>
+                        <li>年龄：{age}岁</li>
+                        <li>语言：{langStr}</li>
+                        <li>家庭地址：{address}</li>
+                    </ul>;
+                }
+            }
+            /**** 组件定义 over ****/
+
+            const tom = {name: 'Tom', sex: '男'};
+            ReactDOM.render(
+                <Person {...tom} />,
+                document.getElementById('root')
+            );
+        </script>
+    </body>
+</html>
