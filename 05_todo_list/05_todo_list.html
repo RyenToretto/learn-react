@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <title>TODO List</title>
+    </head>
+
+    <body>
+        <div id="root"></div>
+
+        <script type="text/javascript" src="../lib/react/react.development.js"></script>
+        <script type="text/javascript" src="../lib/react/react-dom.development.js"></script>
+        <script type="text/javascript" src="../lib/babel/babel-standalone.js"></script>
+        <script type="text/javascript" src="../lib/react/prop-types.js"></script>
+
+        <script type="text/babel">
+            /**** AddTODO 组件定义 start ****/
+            class AddTODO extends React.Component {
+                static defaultProps = {
+                    isPC: true
+                }
+
+                static propTypes = {
+                    todoCount: PropTypes.number.isRequired,
+                    addTodo: PropTypes.func.isRequired // !!! function 不能用，因为是关键字
+                }
+
+                state = {
+                    name: 'AddTODO'
+                }
+
+                clickBtnAdd = () => {
+                    const {addTodo} = this.props;
+                    addTodo(this.refs['newTodoInput'].value);
+                    this.refs['newTodoInput'].value = '';
+                }
+
+                render() {
+                    const {todoCount} = this.props;
+
+                    return <div className={'add_todo'}>
+                        <label>
+                            <input type="text" ref="newTodoInput"
+                                   onKeyDown={(e) => {
+                                       if (e.keyCode == 13) {
+                                           this.clickBtnAdd();
+                                       }
+                                   }}
+                            />
+                        </label>
+                        <button type="button" onClick={this.clickBtnAdd}>
+                            增加
+                            {todoCount ? '(' + todoCount + ')' : null}
+                        </button>
+                    </div>;
+                }
+            }
+            /**** AddTODO 组件定义 over ****/
+
+            /**** TODOList 组件定义 start ****/
+            class TODOList extends React.Component {
+                static defaultProps = {
+                    isPC: true
+                }
+
+                static propTypes = {
+                    todoArr: PropTypes.array.isRequired,
+                    clickBtnDelete: PropTypes.func.isRequired
+                }
+
+                state = {
+                    name: 'TODOList'
+                }
+
+                render() {
+                    const {todoArr, clickBtnDelete} = this.props;
+
+                    return <div className={'todo_list'}>
+                        {
+                            todoArr.map((item, index) => <div key={index}>
+                                {item.name}
+                                &nbsp;&nbsp;&nbsp;&nbsp;
+                                <button type="button" onClick={() => clickBtnDelete(index)}>
+                                    删除
+                                </button>
+                            </div>)
+                        }
+                    </div>;
+                }
+            }
+            /**** TODOList 组件定义 over ****/
+
+            /**** App 组件定义 start ****/
+            class App extends React.Component {
+                static defaultProps = {
+                    isPC: true
+                }
+
+                static propTypes = {
+                }
+
+                state = {
+                    name: 'App',
+                    todoArr: [
+                        {name: '吃饭'},
+                        {name: '睡觉'}
+                    ]
+                }
+
+                addTodo = (newTodo) => {
+                    const {todoArr: oldTodoArr} = this.state;
+                    this.setState({
+                        todoArr: [{name: newTodo}, ...oldTodoArr]
+                    });
+                }
+
+                clickBtnDelete = (deleteIndex) => {
+                    const {todoArr: oldTodoArr} = this.state;
+                    this.setState({
+                        todoArr: oldTodoArr.filter((item, index) => index !== deleteIndex)
+                    });
+                }
+
+                render() {
+                    const {name, todoArr} = this.state;
+                    const {isPC} = this.props;
+
+                    return <div className={'app'}>
+                        <h2>{name}: {isPC ? 'PC 端' : '移动端'} simple todo list</h2>
+                        <AddTODO addTodo={this.addTodo} todoCount={todoArr.length} />
+                        <TODOList todoArr={todoArr} clickBtnDelete={this.clickBtnDelete}/>
+                    </div>;
+                }
+            }
+            /**** App 组件定义 over ****/
+
+            ReactDOM.render(
+                <App />,
+                document.getElementById('root')
+            );
+        </script>
+    </body>
+</html>
