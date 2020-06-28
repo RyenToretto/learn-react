@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <title>表单 form</title>
+    </head>
+
+    <body>
+        <div id="root"></div>
+
+        <script type="text/javascript" src="../lib/react/react.development.js"></script>
+        <script type="text/javascript" src="../lib/react/react-dom.development.js"></script>
+        <script type="text/javascript" src="../lib/babel/babel-standalone.js"></script>
+        <script type="text/javascript" src="../lib/react/prop-types.js"></script>
+
+        <script type="text/babel">
+            /**** DiyForm 组件定义 start ****/
+            class DiyForm extends React.Component {
+                static defaultProps = {
+                    isPC: true
+                }
+
+                static propTypes = {
+                }
+
+                state = {
+                    name: 'DiyForm',
+                    addr: '北京'
+                }
+
+                addrChange = (e, attr) => {
+                    this.setState({
+                        [attr]: e.target.value
+                    })
+                }
+
+                clickSubmit = (e) => {
+                    e.preventDefault(); // 阻止事件的默认行为
+
+                    // 手动收集 表单数据
+                    const username = this.refs['username'].value;
+                    const password = this.refs['password'].value;
+                    const addr = this.state.addr;
+                    console.log('username = ' + username);
+                    console.log('password = ' + password);
+                    console.log(`用户名（${username}）密码（${password}）地址（${addr}）`);
+                }
+
+                render() {
+                    const addr = this.state.addr;
+
+                    return <form className={'diy_form'}>
+                        <label>用户名：
+                            <input ref='username' type="text"/>
+                        </label> <br />
+
+                        <label>密码：
+                            <input ref='password' type="password"/>
+                        </label> <br />
+
+                        <label>自动收集 地址字段：
+                            <input value={addr} onChange={(e) => this.addrChange(e, 'addr')} type="text"/>
+                        </label> <br />
+
+                        <button type="button" onClick={this.clickSubmit}>提交</button> <br />
+                    </form>;
+                }
+            }
+            /**** DiyForm 组件定义 over ****/
+
+            /**** App 组件定义 start ****/
+            class App extends React.Component {
+                static defaultProps = {
+                    isPC: true
+                }
+
+                static propTypes = {
+                }
+
+                state = {
+                    name: 'App'
+                }
+
+                render() {
+                    const {name} = this.state;
+                    const {isPC} = this.props;
+
+                    return <div className={'app'}>
+                        <h2>{name}: {isPC ? 'PC 端' : '移动端'} 表单 Form</h2>
+                        <DiyForm />
+                    </div>;
+                }
+            }
+            /**** App 组件定义 over ****/
+
+            ReactDOM.render(
+                <App />,
+                document.getElementById('root')
+            );
+        </script>
+    </body>
+</html>
