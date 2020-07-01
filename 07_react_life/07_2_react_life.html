@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <title>表单 form</title>
+    </head>
+
+    <body>
+        <div id="root"></div>
+
+        <script type="text/javascript" src="../lib/react/react.development.js"></script>
+        <script type="text/javascript" src="../lib/react/react-dom.development.js"></script>
+        <script type="text/javascript" src="../lib/babel/babel-standalone.js"></script>
+        <script type="text/javascript" src="../lib/react/prop-types.js"></script>
+
+        <script type="text/babel">
+            /**** TooHard 组件定义 start
+                1. 文本 显示/隐藏 动画, 间隔 2s
+                2. 点击按钮 移除 react 组件
+             ****/
+            class TooHard extends React.Component {
+                static defaultProps = {
+                    isPC: true
+                }
+
+                static propTypes = {
+                    removeTooHardCom: PropTypes.func.isRequired
+                }
+
+                state = {
+                    name: 'TooHard',
+                    opacityH2: 0,
+                    shouldAdd: true
+                }
+
+                unmountReactCom = () => {
+                    ReactDOM.unmountComponentAtNode(document.getElementById('root'));
+                }
+
+                unmountThisCom = () => {
+                    this.props.removeTooHardCom && this.props.removeTooHardCom();
+                }
+
+                // 初始渲染, 即将挂载前被调用
+                componentDidMount(){
+                    this.timerId = setInterval(() => {
+                        const {opacityH2: oldOpacityH2, shouldAdd} = this.state;
+                        let numCell = shouldAdd ? 0.1 : (-0.1);
+
+                        let newShouldAdd = shouldAdd;
+                        if (oldOpacityH2 >= 1) {
+                            newShouldAdd = false;
+                            numCell = -0.1;
+                        } else if (oldOpacityH2 <= 0) {
+                            newShouldAdd = true;
+                            numCell = 0.1;
+                        }
+
+                        this.setState({
+                            opacityH2: oldOpacityH2 + numCell,
+                            shouldAdd: newShouldAdd
+                        })
+                    }, 30);
+                }
+
+                // 初始渲染, 会被调用
+                // this.setState 状态数据改变, 会被再次调用
+                render() {
+                    const {opacityH2} = this.state;
+
+                    return <div className={'too_hard'}>
+                        <h2 style={{opacity: opacityH2}}>React 太难了, 怎么办？</h2>
+                        <button onClick={this.unmountThisCom}>不学了</button> <br />
+                        <button onClick={this.unmountReactCom}>卸载 React</button>
+                    </div>;
+                }
+
+                // 组件将要卸载前, 会被调用
+                componentWillUnmount(){
+                    clearInterval(this.timerId);
+                }
+            }
+            /**** TooHard 组件定义 over ****/
+
+            /**** App 组件定义 start ****/
+            class App extends React.Component {
+                static defaultProps = {
+                    isPC: true
+                }
+
+                static propTypes = {
+                }
+
+                state = {
+                    name: 'App',
+                    showTooHard: true
+                }
+
+                toggleTooHardCom = (showTooHard = false) => {
+                    console.log('remove TooHard Com');
+                    this.setState({
+                        showTooHard
+                    })
+                }
+
+                render() {
+                    const {name, showTooHard} = this.state;
+                    const {isPC} = this.props;
+
+                    return <div className={'app'}>
+                        <h2 onClick={() => this.toggleTooHardCom(true)}>
+                            {name}: {isPC ? 'PC 端' : '移动端'} 表单 Form
+                        </h2>
+                        {
+                            showTooHard
+                            ? <TooHard removeTooHardCom={this.toggleTooHardCom}/>
+                            : null
+                        }
+                    </div>;
+                }
+            }
+            /**** App 组件定义 over ****/
+
+            ReactDOM.render(
+                <App />,
+                document.getElementById('root')
+            );
+        </script>
+    </body>
+</html>

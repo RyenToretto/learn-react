@@ -42,11 +42,10 @@
                 }
 
                 // 初始渲染, 即将挂载前被调用
-                componentWillMount(){
+                componentDidMount(){
                     this.timerId = setInterval(() => {
                         const {opacityH2: oldOpacityH2, shouldAdd} = this.state;
                         let numCell = shouldAdd ? 0.1 : (-0.1);
-                        console.log('opacityH2 = ' + oldOpacityH2);
 
                         let newShouldAdd = shouldAdd;
                         if (oldOpacityH2 >= 1) {
