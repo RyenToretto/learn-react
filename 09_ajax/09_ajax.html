@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <title>异步显示效果 09_ajax</title>
+    </head>
+
+    <body>
+        <div id="root"></div>
+
+        <script type="text/javascript" src="../lib/react/react.development.js"></script>
+        <script type="text/javascript" src="../lib/react/react-dom.development.js"></script>
+        <script type="text/javascript" src="../lib/babel/babel-standalone.js"></script>
+        <script type="text/javascript" src="../lib/react/prop-types.js"></script>
+
+        <script type="text/javascript" src="../lib/axios/axios0.19.2.js"></script>
+
+        <script type="text/babel">
+
+            /**** DiyAjax 组件定义 start ****/
+            class DiyAjax extends React.Component {
+                static defaultProps = {
+                    isPC: true
+                }
+
+                static propTypes = {
+                }
+
+                state = {
+                    name: 'DiyAjax',
+                    searchingGit: false,
+                    searchName: 'r',
+                    gitRepositories: []
+                }
+
+                getRepositoriesByName = (searchName) => {
+                    this.setState({searchingGit: true, searchName});
+                    window.axios && window.axios.get(
+                        `https://api.github.com/search/repositories?q=${searchName}&sort=stars`
+                    ).then(response => {
+                        if (response.status === 200 && response.data) {
+                            this.setState({
+                                gitRepositories: response.data.items
+                            })
+                        }
+                        this.setState({searchingGit: false});
+                    }).catch(e => {
+                        this.setState({searchingGit: false});
+                        console.log('48 ===> e');
+                        console.log(e);
+                    });
+                };
+
+                componentDidMount() {
+                    this.getRepositoriesByName(this.state.searchName);
+                }
+
+                render() {
+                    const {gitRepositories, searchingGit} = this.state;
+
+                    return <div className={'diy_ajax'}>
+                        <input type="text"
+                               onChange={(e) => this.getRepositoriesByName(e.target.value)} />
+                        <br />
+                        {
+                            searchingGit
+                                ? <div>loading...</div>
+                                : (
+                                    gitRepositories.length
+                                        ? <div>
+                                            根据搜索获取到的仓库：
+                                            {
+                                                gitRepositories.map((item, index) => <div key={index}>
+                                                    <a href={item['html_url']} target="_blank">
+                                                        {item['full_name']}
+                                                    </a>
+                                                </div>)
+                                            }
+                                        </div>
+                                        : <div>'无结果'</div>
+                                )
+                        }
+
+                    </div>;
+                }
+            }
+            /**** DiyAjax 组件定义 over ****/
+
+            /**** App 组件定义 start ****/
+            class App extends React.Component {
+                static defaultProps = {
+                    isPC: true
+                }
+
+                static propTypes = {
+                }
+
+                state = {
+                    name: 'App'
+                }
+
+                render() {
+                    const {name} = this.state;
+                    const {isPC} = this.props;
+
+                    return <div className={'app'}>
+                        <h2>{name}: {isPC ? 'PC 端' : '移动端'} 异步显示效果 09_ajax</h2>
+                        <DiyAjax />
+                    </div>;
+                }
+            }
+            /**** App 组件定义 over ****/
+
+            ReactDOM.render(
+                <App />,
+                document.getElementById('root')
+            );
+        </script>
+    </body>
+</html>
